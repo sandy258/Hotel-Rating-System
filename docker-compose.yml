@@ -1,0 +1,95 @@
+version: "3.8"
+services:
+  mysqldb:
+    image: mysql
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - 3306:3306
+    networks:
+      - mynetwork
+
+  userservice:
+    depends_on:
+      - mysqldb
+      - eureka
+    build: ./UserService
+    restart: on-failure
+    environment:
+      - spring.datasource.url=jdbc:mysql://mysqldb:3306/justtest?createDatabaseIfNotExist=true
+      - spring.datasource.username=root
+      - spring.datasource.password=root
+    ports:
+      - 8001:8001
+    networks:
+      - mynetwork
+    
+  ratingservice:
+    depends_on:
+      - mysqldb
+      - eureka
+    build: ./RatingService
+    restart: on-failure
+    environment:
+      - spring.datasource.url=jdbc:mysql://mysqldb:3306/justtest?createDatabaseIfNotExist=true
+      - spring.datasource.username=root
+      - spring.datasource.password=root
+    ports:
+      - 8002:8002
+    networks:
+      - mynetwork
+      
+  hotelservice:
+    depends_on:
+      - mysqldb
+      - eureka
+    build: ./HotelService
+    restart: on-failure
+    environment:
+      - spring.datasource.url=jdbc:mysql://mysqldb:3306/justtest?createDatabaseIfNotExist=true
+      - spring.datasource.username=root
+      - spring.datasource.password=root
+    ports:
+      - 8000:8000
+    networks:
+      - mynetwork
+      
+  securityservice:
+    depends_on:
+      - mysqldb
+      - eureka
+    build: ./JWTWithSpringBoot3
+    restart: on-failure
+    environment:
+      - spring.datasource.url=jdbc:mysql://mysqldb:3306/justtest?createDatabaseIfNotExist=true
+      - spring.datasource.username=root
+      - spring.datasource.password=root
+    ports:
+      - 8005:8005
+    networks:
+      - mynetwork
+  eureka:
+    build: ./EurekaServer
+    restart: on-failure
+    ports:
+      - 8004:8004
+    networks:
+      - mynetwork
+      
+  gateway:
+    depends_on:
+      - eureka
+    build: ./APIGateway
+    restart: on-failure
+    ports:
+      - 8003:8003
+    networks:
+      - mynetwork
+      
+networks:
+  mynetwork:
+  
+ 
+
+      
