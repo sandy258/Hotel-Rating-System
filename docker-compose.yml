@@ -59,7 +59,7 @@ services:
     depends_on:
       - mysqldb
       - eureka
-    build: ./JWTWithSpringBoot3
+    build: ./JWTWithSpringBootWithDatabase
     restart: on-failure
     environment:
       - spring.datasource.url=jdbc:mysql://mysqldb:3306/justtest?createDatabaseIfNotExist=true

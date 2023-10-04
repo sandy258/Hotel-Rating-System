@@ -30,4 +30,18 @@ public class HotelServicesImpl  implements HotelServices{
 	public List<Hotel> getAllHotels() {
 		return hotelRepo.findAll();
 	}
+	
+	public Hotel updateHotel(Hotel hotel) throws HotelNotFoundException {
+		Hotel hotel2=getHotel(hotel.getHotelId());
+		hotel2.setHotelDescription(hotel.getHotelDescription());
+		hotel2.setHotelName(hotel.getHotelName());
+		hotel2.setLocation(hotel.getLocation());
+		return hotelRepo.save(hotel2);
+	}
+	
+	public Hotel deleteHotel(String hotelId) throws HotelNotFoundException {
+		Hotel hotel=getHotel(hotelId);
+		hotelRepo.delete(hotel);
+		return hotel;
+	}
 }
